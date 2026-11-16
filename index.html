@@ -255,8 +255,13 @@ const $ = s => document.querySelector(s),
 let ctx, nb, sound = true;
 
 const AC = () => {
-  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-  if (ctx.state === 'suspended') ctx.resume();
+  if (!ctx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    ctx = new AudioContext();
+  }
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
   return ctx;
 };
 
@@ -402,6 +407,10 @@ const FIN = .88;
 
 async function grow() {
   const head = $('#head'), sway = $('#sway'), sunRays = $('#sunRays'), E = 'cubic-bezier(.5,0,.2,1)', D = 2900;
+  
+  // Initialize and unlock audio context immediately on user click gesture
+  AC();
+
   sfx.press();
   await wait(140);
   sfx.grow();
@@ -442,6 +451,7 @@ async function grow() {
 }
 
 async function fold() {
+  AC();
   sfx.sink();
   clearSparkles();
   A($('#sunRays'), [{ opacity: 0.5 }, { opacity: 0 }], { duration: 400 });
@@ -462,7 +472,6 @@ btn.addEventListener('click', async () => {
   if (busy) return;
   busy = true;
   btn.classList.add('busy');
-  AC();
   try {
     grown ? await fold() : await grow();
   } finally {
