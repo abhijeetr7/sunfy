@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Groww Sunfy - Interactive Botanical Experience</title>
-<!-- <link rel="stylesheet" href="jeet.css"> -->
 
 <style>
   :root {
@@ -248,7 +247,7 @@ svg {
 <button id="snd" aria-label="Toggle Sound">🔊</button>
 
 <script>
-  const $ = s => document.querySelector(s),
+const $ = s => document.querySelector(s),
       wait = ms => new Promise(r => setTimeout(r, ms)),
       NS = 'http://www.w3.org/2000/svg',
       INK = '#2a1f14';
@@ -297,7 +296,10 @@ function noise(d, f1, f2, v = .1, q = 1) {
 
 const sfx = {
   press: () => { tone(240, 130, .08, 'triangle', .1); noise(.04, 2000, 1000, .04, 2); },
-  grow: () => { noise(2.6, 280, 850, .03, .8); for (let i = 0; i < 12; i++) tone(350 + i * 48, 410 + i * 48, .18, 'sine', .04, i * 0.2); },
+  grow: () => { 
+    noise(2.6, 280, 850, .03, .8); 
+    for (let i = 0; i < 12; i++) tone(350 + i * 48, 410 + i * 48, .18, 'sine', .04, i * 0.2); 
+  },
   leaf: () => { tone(950, 1600, .09, 'sine', .045); noise(.05, 3200, 5200, .025, 2); },
   pop: () => { tone(280, 1050, .12, 'sine', .22); noise(.06, 2400, 900, .1); },
   bloom: () => {
