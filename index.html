@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Groww Sunfy</title>
-    <style>
-:root {
+<title>Groww Sunfy - Interactive Botanical Experience</title>
+<!-- <link rel="stylesheet" href="jeet.css"> -->
+
+<style>
+  :root {
   --ink: #1d2540;
-  --paper: #fbfdff;
-  --grid: #cfdae6;
+  --bg-gradient: radial-gradient(circle at center, #f4f8ed 0%, #dbe5cc 100%);
+  --grid: rgba(180, 198, 165, 0.35);
 }
 
 * {
@@ -16,78 +18,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  display: grid;
-  place-items: center;
-  background: #e9eff5;
-  background-image: linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size: 28px 28px;
-  color: var(--ink);
-  font-family: "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -13px;
-  width: 96px;
-  height: 26px;
-  margin-left: -48px;
-  background: #ffd95acc;
-  transform: rotate(2deg);
-  box-shadow: 0 1px 3px #0002;
-}
-
-#snd {
-  position: absolute;
-  right: 12px;
-  top: 14px;
-  border: 2px solid var(--ink);
-  background: #fff;
-  border-radius: 10px;
-  font-size: 16px;
-  padding: 3px 8px;
-  cursor: pointer;
-}
-
-.hero {
-  position: absolute;
-  left: 12px;
-  top: 10px;
-  width: 48px;
-  height: 48px;
-  overflow: visible;
-  cursor: pointer;
-  z-index: 3;
-  touch-action: manipulation;
-}
-
-.tick {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  opacity: 0;
-  transition: stroke-dashoffset .3s .1s,opacity .1s .1s;
-}
-
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -96,35 +27,59 @@ body {
 body {
   display: grid;
   place-items: center;
-  background: #e4e9d8;
-  font-family: system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background: var(--bg-gradient);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), 
+                    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+}
+
+/* Ambient Background Aura */
+.ambient-glow {
+  position: absolute;
+  width: min(90vw, 450px);
+  height: min(90vw, 450px);
+  background: radial-gradient(circle, rgba(255,223,94,0.25) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.6s ease;
+}
+
+.stage-container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
 }
 
 .stage {
   position: relative;
-  width: min(78vw,60vh,300px);
-  aspect-ratio: 300/400;
+  width: min(82vw, 65vh, 320px);
+  aspect-ratio: 300 / 400;
+  filter: drop-shadow(0 12px 24px rgba(45, 65, 30, 0.12));
 }
 
 #b {
   position: absolute;
-  left: 13.3%;
-  right: 13.3%;
-  top: 82.5%;
-  bottom: 3%;
+  left: 11.6%;
+  right: 11.6%;
+  top: 82%;
+  bottom: 2.5%;
   padding: 0;
   border: 0;
-  border-radius: 14px;
-  background: none;
+  border-radius: 16px;
+  background: transparent;
   cursor: pointer;
   touch-action: manipulation;
-  z-index: 2;
+  z-index: 10;
 }
 
 #b:focus-visible,
 #snd:focus-visible {
-  outline: 3px solid #e39a1c;
-  outline-offset: 5px;
+  outline: 3px solid #f39c12;
+  outline-offset: 4px;
 }
 
 #b.busy {
@@ -141,15 +96,17 @@ svg {
 }
 
 #btnG {
-  transition: filter .2s,transform .12s;
+  transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 150px 354px;
 }
 
-#b:not(.busy):hover+svg #btnG {
-  filter: brightness(1.08);
+#b:not(.busy):hover + svg #btnG {
+  filter: brightness(1.12) drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+  transform: scale(1.02);
 }
 
-#b:not(.busy):active+svg #btnG {
-  transform: translateY(3px);
+#b:not(.busy):active + svg #btnG {
+  transform: translateY(3px) scale(0.98);
 }
 
 #stem,
@@ -175,123 +132,341 @@ svg {
 }
 
 #sway {
-  transform-origin: 150px 340px;
+  transform-origin: 150px 345px;
+}
+
+/* Floating Pollen Particles */
+#particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #fff 0%, #ffd700 100%);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.4); opacity: 0; }
+  30% { opacity: 0.8; }
+  100% { transform: translateY(-90px) scale(1.2); opacity: 0; }
 }
 
 #snd {
   position: fixed;
-  right: 14px;
-  top: 14px;
-  border: 2px solid #3a2c1c44;
-  background: transparent;
-  border-radius: 10px;
-  font-size: 16px;
-  padding: 4px 9px;
+  right: 18px;
+  top: 18px;
+  border: 2px solid rgba(58, 44, 28, 0.2);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  font-size: 18px;
+  padding: 8px 12px;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+#snd:hover {
+  background: #fff;
+  transform: scale(1.05);
 }
 </style>
 </head>
 <body>
-<div class="stage">
-<button id="b" aria-label="Grow"></button>
-<svg viewBox="0 0 300 400" aria-hidden="true">
-<defs>
- <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#2f5a26" stroke-width="1.1"/></pattern>
- <linearGradient id="sg" gradientUnits="userSpaceOnUse" x1="0" y1="340" x2="0" y2="125"><stop offset=".25" stop-color="#8a6a3e"/><stop offset=".65" stop-color="#6a9a4e"/></linearGradient>
-</defs>
-<g id="sway">
- <path id="stemO" pathLength="1" d="M150 345C146 285 156 205 150 125" fill="none" stroke="#3a2c1c" stroke-width="9.5"/>
- <path id="stem" pathLength="1" d="M150 345C146 285 156 205 150 125" fill="none" stroke="url(#sg)" stroke-width="6"/>
- <g id="leaves"></g>
- <g id="head"><circle cx="150" cy="118" r="34" fill="#6a9a4e" stroke="#3a2c1c" stroke-width="1.5"/><g id="petB"></g><g id="petF"></g><g id="disc"></g></g>
-</g>
-<g id="btnG">
- <rect x="40" y="330" width="220" height="50" rx="14" fill="#5c9a5a"/>
- <rect x="46" y="333" width="208" height="14" rx="7" fill="#fff" opacity=".14"/>
- <text x="150" y="364" text-anchor="middle" font-size="22" font-weight="600" letter-spacing=".5" fill="#fff">Grow</text>
-</g>
-</svg>
+<div class="ambient-glow"></div>
+<div class="stage-container">
+  <div class="stage">
+    <button id="b" aria-label="Grow Sunflower"></button>
+    <svg viewBox="0 0 300 400" aria-hidden="true">
+      <defs>
+        <!-- Leaf Vein Texture Hatch -->
+        <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="4" stroke="#2f5a26" stroke-width="1.1"/>
+        </pattern>
+        <!-- Stem Rich Gradient -->
+        <linearGradient id="sg" gradientUnits="userSpaceOnUse" x1="0" y1="340" x2="0" y2="125">
+          <stop offset=".25" stop-color="#5a4022"/>
+          <stop offset=".65" stop-color="#73a942"/>
+        </linearGradient>
+        <!-- Flower Disc Radial Glow -->
+        <radialGradient id="discGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#6f421f"/>
+          <stop offset="100%" stop-color="#3b200b"/>
+        </radialGradient>
+        <!-- Drop Shadow Filter for Depth -->
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+
+      <!-- Ambient Sunlight Rays behind flower -->
+      <g id="sunRays" opacity="0">
+        <circle cx="150" cy="118" r="80" fill="url(#rayGrad)" opacity="0.3"/>
+      </g>
+
+      <!-- Swaying Plant Group -->
+      <g id="sway">
+        <path id="stemO" pathLength="1" d="M150 345C146 285 156 205 150 125" fill="none" stroke="#2a1f14" stroke-width="10" stroke-linecap="round"/>
+        <path id="stem" pathLength="1" d="M150 345C146 285 156 205 150 125" fill="none" stroke="url(#sg)" stroke-width="6.5" stroke-linecap="round"/>
+        
+        <!-- Foliage -->
+        <g id="leaves" filter="url(#shadow)"></g>
+
+        <!-- Flower Head -->
+        <g id="head" filter="url(#shadow)">
+          <g id="petB"></g>
+          <g id="petF"></g>
+          <circle cx="150" cy="118" r="34" fill="url(#discGrad)" stroke="#2a1f14" stroke-width="1.8"/>
+          <g id="disc"></g>
+          <!-- Center Pollen Highlight Sparkle -->
+          <circle cx="143" cy="111" r="4" fill="#fff" opacity="0.25"/>
+        </g>
+      </g>
+
+      <!-- Interactive Grow Button Graphic -->
+      <g id="btnG" filter="url(#shadow)">
+        <rect x="35" y="328" width="230" height="52" rx="16" fill="#4d8c46" stroke="#356130" stroke-width="1.5"/>
+        <rect x="41" y="331" width="218" height="15" rx="7.5" fill="#fff" opacity=".22"/>
+        <text id="btnText" x="150" y="362" text-anchor="middle" font-size="20" font-weight="700" letter-spacing="1" fill="#fff" style="font-family: inherit;">GROW</text>
+      </g>
+    </svg>
+    
+    <!-- Floating Sparkles / Pollen Container -->
+    <div id="particles"></div>
+  </div>
 </div>
-<button id="snd" aria-label="Toggle sound">🔊</button>
 
-    <script>
-/* ---------- sound (synthesized) ---------- */
-/* ---------- drawing ---------- */
-// leaves along the stem: x, y, angle, length, colour
-// sunflower head
-/* ---------- grow, flower, and fold back ---------- */
+<button id="snd" aria-label="Toggle Sound">🔊</button>
 
-const $=s=>document.querySelector(s),wait=ms=>new Promise(r=>setTimeout(r,ms)),R=(a,b)=>a+Math.random()*(b-a),NS='http://www.w3.org/2000/svg',INK='#3a2c1c';
+<script>
+  const $ = s => document.querySelector(s),
+      wait = ms => new Promise(r => setTimeout(r, ms)),
+      NS = 'http://www.w3.org/2000/svg',
+      INK = '#2a1f14';
 
-let ctx,nb,sound=true;
-const AC=()=>{if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx};
-function tone(f1,f2,d,type='sine',v=.15,delay=0){if(!sound)return;const c=AC(),t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();
- o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);
- g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);
- o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.02)}
-function noise(d,f1,f2,v=.12,q=1){if(!sound)return;const c=AC(),t=c.currentTime;
- if(!nb){nb=c.createBuffer(1,c.sampleRate*2,c.sampleRate);const a=nb.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1}
- const s=c.createBufferSource(),b=c.createBiquadFilter(),g=c.createGain();s.buffer=nb;b.type='bandpass';b.Q.value=q;
- b.frequency.setValueAtTime(f1,t);b.frequency.exponentialRampToValueAtTime(f2,t+d);
- g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
- s.connect(b).connect(g).connect(c.destination);s.start(t,Math.random()*.5,d+.02)}
-const sfx={
- press:()=>{tone(220,120,.09,'triangle',.12);noise(.05,1800,900,.05,2)},
- grow:()=>{noise(2.4,260,800,.035,.6);for(let i=0;i<10;i++)tone(380+i*55,430+i*55,.16,'sine',.045,i*.23)},
- leaf:()=>{tone(900,1500,.08,'sine',.05);noise(.05,3000,5000,.03,2)},
- pop:()=>{tone(250,950,.1,'sine',.25);noise(.05,2200,800,.12)},
- bloom:()=>{noise(.5,500,3000,.07,.5);[[523,0],[659,.09],[784,.18],[1047,.27]].forEach(([f,d])=>{tone(f,f,.5,'triangle',.07,d);tone(f*2,f*2,.35,'sine',.03,d)})},
- sink:()=>{tone(700,160,.3,'sine',.14);noise(.12,1600,600,.07)}
+let ctx, nb, sound = true;
+
+const AC = () => {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (ctx.state === 'suspended') ctx.resume();
+  return ctx;
 };
-$('#snd').onclick=e=>{e.stopPropagation();sound=!sound;e.currentTarget.textContent=sound?'🔊':'🔇'};
 
-const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.append(e);return e};
-const btn=$('#b'),live=[];
-const A=(e,kf,o)=>{const a=e.animate(kf,Object.assign({fill:'forwards'},o));live.push(a);return a};
-const pop=(e,d,o={})=>A(e,[{transform:'scale(0) rotate(-25deg)',opacity:1},{transform:'scale(1.12) rotate(3deg)',opacity:1,offset:.7},{transform:'scale(1) rotate(0)',opacity:1}],Object.assign({duration:d,easing:'cubic-bezier(.3,.8,.4,1)'},o));
-
-const L=[[149,312,200,44,'#6a9a4e'],[150,272,-20,44,'#86b05a'],[151,232,205,38,'#5b8c44'],[152,194,-25,32,'#6a9a4e']];
-const leaves=L.map(([x,y,a,l,c])=>{const g=el('g',{transform:`translate(${x} ${y}) rotate(${a})`},$('#leaves')),i=el('g',{class:'lf'},g),w=l*.34,d=`M0 0C${l*.25} ${-w} ${l*.7} ${-w*1.1} ${l} 0C${l*.7} ${w*1.1} ${l*.25} ${w} 0 0Z`;
- i.style.transformOrigin='0px 0px';
- el('path',{d,fill:c,stroke:INK,'stroke-width':1.4,'stroke-linejoin':'round'},i);el('path',{d,fill:'url(#hatch)',opacity:.4},i);
- el('path',{d:`M0 0Q${l*.5} ${-w*.15} ${l*.92} 0`,fill:'none',stroke:INK,'stroke-width':1},i);return i});
-
-const petB=[],petF=[];
-for(let i=0;i<16;i++){const g=el('g',{transform:`rotate(${i*22.5} 150 118)`},$('#petB'));petB.push(el('ellipse',{class:'pt',cx:150,cy:73,rx:10.5,ry:21,fill:'#e8a21d',stroke:INK,'stroke-width':1.3},g))}
-for(let i=0;i<16;i++){const g=el('g',{transform:`rotate(${i*22.5+11.25} 150 118)`},$('#petF'));petF.push(el('ellipse',{class:'pt',cx:150,cy:75,rx:9.5,ry:19,fill:'#f6c431',stroke:INK,'stroke-width':1.3},g));el('path',{d:'M150 90V58',stroke:'#c98614','stroke-width':.8,fill:'none'},g)}
-const disc=$('#disc');el('circle',{cx:150,cy:118,r:26,fill:'#5b3a1e',stroke:INK,'stroke-width':1.5},disc);
-for(let i=1;i<72;i++){const a=i*2.39996,r=2.9*Math.sqrt(i);el('circle',{cx:150+r*Math.cos(a),cy:118+r*Math.sin(a),r:1.5,fill:i%3?'#3b2412':'#8a5b2e'},disc)}
-
-let busy=false,grown=false;
-const FIN=.85;
-async function grow(){
- const head=$('#head'),sway=$('#sway'),E='cubic-bezier(.5,0,.2,1)',D=2800;
- sfx.press();await wait(150);sfx.grow();
- ['#stemO','#stem'].forEach(s=>A($(s),[{strokeDashoffset:1.02},{strokeDashoffset:0}],{duration:D,easing:E}));
- [.14,.34,.54,.74].forEach((f,i)=>setTimeout(()=>{sfx.leaf();pop(leaves[i],650)},D*f));
- await wait(D-100);
- sfx.pop();A(head,[{transform:'scale(0)',opacity:1},{transform:'scale(.46)',opacity:1,offset:.7},{transform:'scale(.38)',opacity:1}],{duration:380});
- await wait(520);
- sfx.bloom();
- A(head,[{transform:'scale(.38)'},{transform:`scale(${FIN*1.08})`,offset:.7},{transform:`scale(${FIN})`}],{duration:900,easing:'cubic-bezier(.3,.9,.4,1)'});
- petB.forEach((p,i)=>pop(p,620,{delay:i*32}));petF.forEach((p,i)=>pop(p,620,{delay:140+i*32}));
- A($('#disc'),[{transform:'scale(0)'},{transform:'scale(1.12)',offset:.7},{transform:'scale(1)'}],{duration:520,delay:360});
- await wait(1300);
- if(!matchMedia('(prefers-reduced-motion:reduce)').matches)A(sway,[{transform:'rotate(-1.4deg)'},{transform:'rotate(1.4deg)'}],{duration:2000,iterations:Infinity,direction:'alternate',easing:'ease-in-out'});
- grown=true;
+function tone(f1, f2, d, type = 'sine', v = .12, delay = 0) {
+  if (!sound) return;
+  const c = AC(), t = c.currentTime + delay, o = c.createOscillator(), g = c.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(f1, t);
+  o.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(v, t + .015);
+  g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  o.connect(g).connect(c.destination);
+  o.start(t);
+  o.stop(t + d + .03);
 }
-async function fold(){
- sfx.sink();
- await A($('#head'),[{transform:`scale(${FIN})`},{transform:'scale(0)'}],{duration:420,easing:'ease-in'}).finished;
- leaves.slice().reverse().forEach((l,i)=>A(l,[{transform:'scale(1)'},{transform:'scale(0)'}],{duration:300,delay:i*70}));
- await wait(380);
- ['#stemO','#stem'].forEach(s=>A($(s),[{strokeDashoffset:0},{strokeDashoffset:1.02}],{duration:800,easing:'ease-in'}));
- await wait(850);
- live.splice(0).forEach(a=>a.cancel());grown=false;
+
+function noise(d, f1, f2, v = .1, q = 1) {
+  if (!sound) return;
+  const c = AC(), t = c.currentTime;
+  if (!nb) {
+    nb = c.createBuffer(1, c.sampleRate * 2, c.sampleRate);
+    const a = nb.getChannelData(0);
+    for (let i = 0; i < a.length; i++) a[i] = Math.random() * 2 - 1;
+  }
+  const s = c.createBufferSource(), b = c.createBiquadFilter(), g = c.createGain();
+  s.buffer = nb;
+  b.type = 'bandpass';
+  b.Q.value = q;
+  b.frequency.setValueAtTime(f1, t);
+  b.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(v, t);
+  g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  s.connect(b).connect(g).connect(c.destination);
+  s.start(t, Math.random() * .5, d + .02);
 }
-btn.addEventListener('click',async()=>{
- if(busy)return;busy=true;btn.classList.add('busy');AC();
- try{grown?await fold():await grow()}finally{btn.classList.remove('busy');busy=false}
+
+const sfx = {
+  press: () => { tone(240, 130, .08, 'triangle', .1); noise(.04, 2000, 1000, .04, 2); },
+  grow: () => { noise(2.6, 280, 850, .03, .8); for (let i = 0; i < 12; i++) tone(350 + i * 48, 410 + i * 48, .18, 'sine', .04, i * 0.2); },
+  leaf: () => { tone(950, 1600, .09, 'sine', .045); noise(.05, 3200, 5200, .025, 2); },
+  pop: () => { tone(280, 1050, .12, 'sine', .22); noise(.06, 2400, 900, .1); },
+  bloom: () => {
+    noise(.6, 600, 3200, .06, .6);
+    [[523, 0], [659, .08], [784, .16], [1047, .24], [1318, .32]].forEach(([f, d]) => {
+      tone(f, f, .55, 'triangle', .06, d);
+      tone(f * 1.5, f * 1.5, .4, 'sine', .025, d);
+    });
+  },
+  sink: () => { tone(750, 150, .32, 'sine', .12); noise(.14, 1500, 500, .06); }
+};
+
+$('#snd').onclick = e => {
+  e.stopPropagation();
+  sound = !sound;
+  e.currentTarget.textContent = sound ? '🔊' : '🔇';
+};
+
+const el = (t, a, p) => {
+  const e = document.createElementNS(NS, t);
+  for (const k in a) e.setAttribute(k, a[k]);
+  p && p.append(e);
+  return e;
+};
+
+const btn = $('#b'), btnText = $('#btnText'), live = [];
+const A = (e, kf, o) => {
+  const a = e.animate(kf, Object.assign({ fill: 'forwards' }, o));
+  live.push(a);
+  return a;
+};
+
+const pop = (e, d, o = {}) => A(e, [
+  { transform: 'scale(0) rotate(-30deg)', opacity: 1 },
+  { transform: 'scale(1.15) rotate(4deg)', opacity: 1, offset: .7 },
+  { transform: 'scale(1) rotate(0)', opacity: 1 }
+], Object.assign({ duration: d, easing: 'cubic-bezier(.3, .8, .4, 1)' }, o));
+
+// Create Leaf Structures with realistic curvature
+const L = [
+  [149, 312, 195, 48, '#639642'],
+  [150, 270, -22, 48, '#7bb850'],
+  [151, 228, 202, 42, '#558238'],
+  [152, 188, -26, 36, '#6b9f47']
+];
+
+const leaves = L.map(([x, y, a, l, c]) => {
+  const g = el('g', { transform: `translate(${x} ${y}) rotate(${a})` }, $('#leaves')),
+        i = el('g', { class: 'lf' }, g),
+        w = l * .36,
+        d = `M0 0C${l * .28} ${-w} ${l * .72} ${-w * 1.15} ${l} 0C${l * .72} ${w * 1.15} ${l * .28} ${w} 0 0Z`;
+  
+  i.style.transformOrigin = '0px 0px';
+  el('path', { d, fill: c, stroke: INK, 'stroke-width': 1.5, 'stroke-linejoin': 'round' }, i);
+  el('path', { d, fill: 'url(#hatch)', opacity: .35 }, i);
+  el('path', { d: `M0 0Q${l * .5} ${-w * .18} ${l * .94} 0`, fill: 'none', stroke: INK, 'stroke-width': 1.1 }, i);
+  return i;
+});
+
+// Sunflower Petals Layers (Back & Front with radiant gold/amber gradient)
+const petB = [], petF = [];
+for (let i = 0; i < 16; i++) {
+  const g = el('g', { transform: `rotate(${i * 22.5} 150 118)` }, $('#petB'));
+  petB.push(el('ellipse', { class: 'pt', cx: 150, cy: 72, rx: 11, ry: 23, fill: '#e09811', stroke: INK, 'stroke-width': 1.4 }, g));
+}
+
+for (let i = 0; i < 16; i++) {
+  const g = el('g', { transform: `rotate(${i * 22.5 + 11.25} 150 118)` }, $('#petF'));
+  petF.push(el('ellipse', { class: 'pt', cx: 150, cy: 74, rx: 10, ry: 21, fill: '#f7c02b', stroke: INK, 'stroke-width': 1.4 }, g));
+  el('path', { d: 'M150 92V56', stroke: '#c4800e', 'stroke-width': .9, fill: 'none' }, g);
+}
+
+// Center Seed Disc with Fibonacci spiral pattern
+const disc = $('#disc');
+for (let i = 1; i < 76; i++) {
+  const a = i * 2.39996, r = 2.95 * Math.sqrt(i);
+  el('circle', { cx: 150 + r * Math.cos(a), cy: 118 + r * Math.sin(a), r: 1.6, fill: i % 3 ? '#2c180a' : '#8c592b' }, disc);
+}
+
+// Spawn Ambient Pollen Sparkles
+function spawnSparkles() {
+  const container = $('#particles');
+  container.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = `${120 + Math.random() * 60}px`;
+    p.style.top = `${80 + Math.random() * 80}px`;
+    p.style.animation = `floatUp ${1.5 + Math.random() * 1.5}s ease-out ${Math.random() * 0.8}s infinite`;
+    container.appendChild(p);
+  }
+}
+
+function clearSparkles() {
+  $('#particles').innerHTML = '';
+}
+
+let busy = false, grown = false;
+const FIN = .88;
+
+async function grow() {
+  const head = $('#head'), sway = $('#sway'), sunRays = $('#sunRays'), E = 'cubic-bezier(.5,0,.2,1)', D = 2900;
+  sfx.press();
+  await wait(140);
+  sfx.grow();
+  
+  // Animate Stem Growth
+  ['#stemO', '#stem'].forEach(s => A($(s), [{ strokeDashoffset: 1.02 }, { strokeDashoffset: 0 }], { duration: D, easing: E }));
+  
+  // Unfurl Leaves progressively
+  [.15, .36, .57, .78].forEach((f, i) => setTimeout(() => { sfx.leaf(); pop(leaves[i], 680); }, D * f));
+  
+  await wait(D - 80);
+  
+  // Bud Appears & Pops Open
+  sfx.pop();
+  A(head, [{ transform: 'scale(0)', opacity: 1 }, { transform: 'scale(.48)', opacity: 1, offset: .7 }, { transform: 'scale(.4)', opacity: 1 }], { duration: 380 });
+  
+  await wait(520);
+  sfx.bloom();
+  
+  // Full Bloom Scale & Sunburst Aura
+  A(head, [{ transform: 'scale(.4)' }, { transform: `scale(${FIN * 1.09})`, offset: .7 }, { transform: `scale(${FIN})` }], { duration: 950, easing: 'cubic-bezier(.3,.9,.4,1)' });
+  A(sunRays, [{ opacity: 0, transform: 'scale(0.2)' }, { opacity: 0.8, transform: 'scale(1.1)', offset: 0.7 }, { opacity: 0.5, transform: 'scale(1)' }], { duration: 800, easing: 'ease-out' });
+  
+  petB.forEach((p, i) => pop(p, 650, { delay: i * 28 }));
+  petF.forEach((p, i) => pop(p, 650, { delay: 120 + i * 28 }));
+  A($('#disc'), [{ transform: 'scale(0)' }, { transform: 'scale(1.12)', offset: .7 }, { transform: 'scale(1)' }], { duration: 540, delay: 360 });
+  
+  spawnSparkles();
+  await wait(1200);
+  
+  // Gentle Ambient Swaying
+  if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    A(sway, [{ transform: 'rotate(-1.6deg)' }, { transform: 'rotate(1.6deg)' }], { duration: 2200, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+  }
+  
+  btnText.textContent = 'FOLD';
+  grown = true;
+}
+
+async function fold() {
+  sfx.sink();
+  clearSparkles();
+  A($('#sunRays'), [{ opacity: 0.5 }, { opacity: 0 }], { duration: 400 });
+  
+  await A($('#head'), [{ transform: `scale(${FIN})` }, { transform: 'scale(0)' }], { duration: 420, easing: 'ease-in' }).finished;
+  leaves.slice().reverse().forEach((l, i) => A(l, [{ transform: 'scale(1)' }, { transform: 'scale(0)' }], { duration: 320, delay: i * 65 }));
+  
+  await wait(380);
+  ['#stemO', '#stem'].forEach(s => A($(s), [{ strokeDashoffset: 0 }, { strokeDashoffset: 1.02 }], { duration: 850, easing: 'ease-in' }));
+  
+  await wait(850);
+  live.splice(0).forEach(a => a.cancel());
+  btnText.textContent = 'GROW';
+  grown = false;
+}
+
+btn.addEventListener('click', async () => {
+  if (busy) return;
+  busy = true;
+  btn.classList.add('busy');
+  AC();
+  try {
+    grown ? await fold() : await grow();
+  } finally {
+    btn.classList.remove('busy');
+    busy = false;
+  }
 });
 </script>
 </body>
